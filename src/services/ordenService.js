@@ -16,10 +16,17 @@ const findAllOrdenes = async() => {
     return response.data;
 }
 
-const saveOrden = async ({ total, clienteCorreo, productos }) => {
+const saveOrden = async ({ moneda, clienteId, productos }) => {
     return await axios.post(BASE_URL, {
-        total,
-        clienteCorreo,
+        moneda,
+        clienteId,
+        productos
+    }, config());
+}
+const updateOrden = async ({ id, moneda, clienteId, productos }) => {
+    return await axios.put(`${BASE_URL}/${id}`, {
+        moneda,
+        clienteId,
         productos
     }, config());
 }
@@ -29,4 +36,4 @@ const removeOrden = async (id) => {
     return findAllOrdenes();
 }
 
-export default {findAllOrdenes, saveOrden, removeOrden};
+export default {findAllOrdenes, saveOrden, removeOrden, updateOrden};

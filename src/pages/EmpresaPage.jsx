@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../auth/context/AuthContext";
 import { EmpresaList } from "../components/EmpresaList";
 import { EmpresaForm } from "../components/EmpresaForm";
+import { EmpresaAdd } from "../components/EmpresaAdd";
 
 export const EmpresaPage = () => {
     const { login } = useContext(AuthContext);
@@ -16,7 +17,7 @@ export const EmpresaPage = () => {
                 <div className="row">
                     <div className="col">
                     {!login.isAdmin || <>
-                        <EmpresaForm />
+                        <EmpresaAdd />
                     </> } 
                     </div>
                 </div>

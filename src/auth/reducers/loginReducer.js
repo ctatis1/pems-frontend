@@ -12,6 +12,8 @@ export const loginReducer = (state = {}, action) => {
                 isAdmin: false,
                 user: undefined
             };
+        case 'loadingUsers':
+            return action.payload;
         default:
             return state;
     }

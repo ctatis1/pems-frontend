@@ -1,17 +1,34 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context/AuthContext";
-import { useLocation } from "react-router-dom";
-import { Alert, NavLink } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Alert, Button, Card, Col, ListGroup, Row } from "react-bootstrap";
 import ordenService from "../services/ordenService";
+import { OrdenForm } from "./OrdenForm";
+import productoService from "../services/productoService";
+import clienteService from "../services/clienteService";
 
 export const OrdenList = () => {
     const [ordenes, setOrdenes] = useState([]);
-    const { login } = useContext(AuthContext);
-    const location = useLocation();
+    const [modalConfig, setModalConfig] = useState({ isOpen: false });
+    const [updatedOrden, setUpdatedOrden] = useState({
+        id: 0,
+        moneda: '',
+        clienteId: '',
+        productos: {}
+    });
+    const [clientes, setClientes] = useState([]);
+    const [productos, setProductos] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         ordenService.findAllOrdenes().then((initalOrdenes) => {
             setOrdenes(initalOrdenes);
+        }).catch(err => console.log(err));
+        productoService.findAllProductos().then((initialProductos) => {
+            setProductos(initialProductos);
+        }).catch(err => console.log(err));
+        clienteService.findAllClientes().then((initialClientes) => {
+            setClientes(initialClientes);
         }).catch(err => console.log(err));
     },[location]);
 
@@ -24,6 +41,45 @@ export const OrdenList = () => {
         );
     }
 
+    const openModal = () => {
+        setModalConfig({
+          isOpen: true,
+          title: "Editar Orden",
+        });
+    };
+    
+    const closeModal = () => {
+        setModalConfig((prev) => ({ ...prev, isOpen: false }));
+    };
+
+    const updateOrden = (orden) => {
+        setUpdatedOrden({
+            id: orden.id,
+            moneda: orden.moneda,
+            clienteId: orden.clienteId,
+            productos: {}
+        });
+        openModal();
+    }
+    
+    const handleSubmit = () => {
+        ordenService
+            .updateOrden(updatedOrden)
+            .then((resp) => {
+                alert(resp.data)
+                navigate('/ordenes')
+            })
+            .catch((err) => alert(err));
+
+        setUpdatedOrden({
+            id: 0,
+            moneda: '',
+            clienteId: '',
+            productos: {}
+        });
+        closeModal();
+    }; 
+
 
     return(
         <>
@@ -31,39 +87,55 @@ export const OrdenList = () => {
                 ordenes.length === 0 ?
                 <Alert variant="primary">No se han gestionado Ordenes para los Clientes</Alert>
                 :
-                <table className="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Ordenes</th>
-                            {!login.isAdmin || <>
-                                <th></th>
-                            </>}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            ordenes.map(orden => (
-                                <tr key={orden.id}>
-                                    <td>{orden.nombre}</td>
-                                    <td>{orden.correo}</td>
-                                    <td>{orden.ordenes.length > 0 ?
-                                        <NavLink to="/ordenes">Ver Ordenes</NavLink>
-                                        :
-                                        "No cuenta con ordenes vigentes"
-                                        }</td>
-                                {!login.isAdmin || <>
-                                        <td>
-                                            <i className="bi bi-trash3-fill" onClick={() => deleteOrden(orden.id)} style={{ cursor: "pointer" }}></i>
-                                        </td>
-                                </>}
-                                    
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>     
+                ordenes.map((orden) => (
+                    <>
+                        <Row>
+                            <Col></Col> 
+                            <Col xs={9}>
+                            <Card style={{ width: '100%' }}>
+                                <Card.Body>
+                                    <Card.Title>Orden #{orden.id}</Card.Title>
+                                    <Row>
+                                        <Col md={6}>
+                                            <ListGroup variant="flush">
+                                                <ListGroup.Item>
+                                                    <h6>Cliente</h6>
+                                                    <p><strong>Correo:</strong> {orden.clienteCorreo}</p>
+                                                    <p><strong>Total:</strong> {orden.total} {orden.moneda}</p>
+                                                </ListGroup.Item>
+                                            </ListGroup>
+                                        </Col>
+                                        <Col md={6}>
+                                            <ListGroup variant="flush">
+                                                {orden.productos.map((producto) => (
+                                                    <ListGroup.Item key={producto.id}>
+                                                        <h6>{producto.nombre}</h6>
+                                                        <p><strong>Código:</strong> {producto.codigo}</p>
+                                                        <p><strong>Cantidad:</strong> {producto.cantidad}</p>
+                                                    </ListGroup.Item>
+                                                ))}
+                                            </ListGroup>
+                                        </Col>
+                                    </Row>
+                                    <Button variant="primary" style={{ marginRight: '15px' }} onClick={() => updateOrden(orden)}>Editar</Button>
+                                    <Button variant="danger" onClick={() => deleteOrden(orden.id)}>Eliminar</Button>  
+                                </Card.Body>
+                            </Card>
+                            </Col> 
+                            <Col></Col> 
+                        </Row>
+                        <br />
+                        <OrdenForm 
+                            setOrdenForm={setUpdatedOrden} 
+                            ordenForm={updatedOrden} 
+                            closeModal={closeModal} 
+                            modalConfig={modalConfig} 
+                            handleSubmit={handleSubmit} 
+                            clientes={clientes}
+                            productos={productos}
+                        />
+                    </>
+                ))
             }
         </>
     );

@@ -15,6 +15,10 @@ const findAllClientes = async() => {
     const response = await axios.get(BASE_URL, config());
     return response.data;
 }
+const findCliente = async({id}) => {
+    const response = await axios.get(`${BASE_URL}/${id}`, config());
+    return response.data;
+}
 
 const saveCliente = async ({ nombre, correo }) => {
     return await axios.post(BASE_URL, {
@@ -28,4 +32,4 @@ const removeCliente = async (id) => {
     return findAllClientes();
 }
 
-export default {findAllClientes, removeCliente, saveCliente};
+export default {findAllClientes, removeCliente, saveCliente, findCliente};

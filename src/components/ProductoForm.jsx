@@ -10,9 +10,10 @@ const initialProductoForm = {
     codigo: '',
     nombre: '',
     caracteristicas: '',
+    stock: 0,
     precios: {
-        COP: '',
-        USD: ''
+        'COP': '',
+        'USD': ''
     },
     empresaNit: '',
     categoriaId: ''
@@ -157,6 +158,14 @@ export const ProductoForm = () => {
                             placeholder="Precio en USD"
                             value={productoForm.precios.USD}
                             onChange={(e) => setProductoForm({ ...productoForm, precios: {...productoForm.precios, USD: e.target.value} })}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Control
+                            type="text"
+                            placeholder="Unidades"
+                            value={productoForm.stock}
+                            onChange={(e) => setProductoForm({ ...productoForm, stock: e.target.value })}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">

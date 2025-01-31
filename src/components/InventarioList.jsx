@@ -73,7 +73,7 @@ export const InventarioList = () => {
                                     </td>
                                 {!login.isAdmin || <>
                                     <td>
-                                        <i className="bi bi-pen-fill" onClick={() => deleteProducto(producto.id)} style={{ cursor: "pointer" }}></i>
+                                        <i className="bi bi-trash-fill" onClick={() => deleteProducto(producto.id)} style={{ cursor: "pointer" }}></i>
                                     </td>
                                 </>}
                                     

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../auth/context/AuthContext";
 import { OrdenList } from "../components/OrdenList";
+import { OrdenAdd } from "../components/OrderAdd";
 
 export const OrdenPage = () => {
     const { login } = useContext(AuthContext);
@@ -15,14 +16,12 @@ export const OrdenPage = () => {
                 <div className="row">
                     <div className="col">
                     {!login.isAdmin || <>
-                        
+                        <OrdenAdd />
                     </> } 
                     </div>
                 </div>
                 <br />
-                <div className="row">
-                    <OrdenList />
-                </div>
+                <OrdenList />
 
             </div>
         </>

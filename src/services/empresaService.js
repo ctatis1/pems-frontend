@@ -24,10 +24,18 @@ const saveEmpresa = async ({ nit, nombre, direccion, telefono }) => {
         telefono
     }, config());
 }
+const updateEmpresa = async ({ nit, nombre, direccion, telefono }) => {
+    return await axios.put(`${BASE_URL}/${nit}`, {
+        nit,
+        nombre,
+        direccion,
+        telefono
+    }, config());
+}
 
 const removeEmpresa = async (id) => {
     await axios.delete(`${BASE_URL}/${id}`, config());
     return findAllEmpresas();
 }
 
-export default {findAllEmpresas, removeEmpresa, saveEmpresa};
+export default {findAllEmpresas, removeEmpresa, saveEmpresa, updateEmpresa};

@@ -16,14 +16,15 @@ const findAllProductos = async() => {
     return response.data;
 }
 
-const saveProducto = async ({ codigo, nombre, caracteristicas, precios, empresaNit, categoriaId }) => {
+const saveProducto = async ({ codigo, nombre, caracteristicas, precios, empresaNit, categoriaId, stock }) => {
     return await axios.post(BASE_URL, {
         codigo,
         nombre,
         caracteristicas,
         precios,
         empresaNit,
-        categoriaId
+        categoriaId,
+        stock
     }, config());
 }
 
