@@ -82,7 +82,7 @@ export const useCategoria = () => {
         }
     }
 
-    const handleRemoveCategoria = (nit) => {
+    const handleRemoveCategoria = (id) => {
         if (!login.isAdmin) return;
         Swal.fire({
             title: 'Esta seguro que desea eliminar?',
@@ -93,20 +93,22 @@ export const useCategoria = () => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, eliminar!'
         }).then(async (res) => {
-            try {
-                await empresaService.removeCategoria(nit);
-                dispatch({
-                    type: 'removeCategoria',
-                    payload: nit
-                });
-                Swal.fire(
-                    'Categoria Eliminada!',
-                    'La categoria ha sido eliminado con exito!',
-                    'success'
-                );
-            } catch (error) {
-                if (error.response?.status == 403) {
-                    handlerLogout();
+            if (res.isConfirmed) {
+                try {
+                    await empresaService.removeCategoria(id);
+                    dispatch({
+                        type: 'removeCategoria',
+                        payload: id
+                    });
+                    Swal.fire(
+                        'Categoria Eliminada!',
+                        'La categoria ha sido eliminado con exito!',
+                        'success'
+                    );
+                } catch (error) {
+                    if (error.response?.status == 403) {
+                        handlerLogout();
+                    }
                 }
             }
         });

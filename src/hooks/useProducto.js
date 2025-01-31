@@ -91,7 +91,7 @@ export const useProducto = () => {
         }
     }
 
-    const handleRemoveProducto = (nit) => {
+    const handleRemoveProducto = (id) => {
         if (!login.isAdmin) return;
         Swal.fire({
             title: 'Esta seguro que desea eliminar?',
@@ -102,20 +102,22 @@ export const useProducto = () => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, eliminar!'
         }).then(async (res) => {
-            try {
-                await productoService.removeProducto(id);
-                dispatch({
-                    type: 'removeProducto',
-                    payload: nit
-                });
-                Swal.fire(
-                    'Producto Eliminado!',
-                    'El producto ha sido eliminado con exito!',
-                    'success'
-                );
-            } catch (error) {
-                if (error.response?.status == 403) {
-                    handlerLogout();
+            if (res.isConfirmed) {
+                try {
+                    await productoService.removeProducto(id);
+                    dispatch({
+                        type: 'removeProducto',
+                        payload: nit
+                    });
+                    Swal.fire(
+                        'Producto Eliminado!',
+                        'El producto ha sido eliminado con exito!',
+                        'success'
+                    );
+                } catch (error) {
+                    if (error.response?.status == 403) {
+                        handlerLogout();
+                    }
                 }
             }
         });

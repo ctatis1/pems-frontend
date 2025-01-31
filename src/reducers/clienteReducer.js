@@ -5,23 +5,14 @@ export const clienteReducer = (state = [], action) => {
             
             return [
                 ...state,
-                {
-                    ...action.payload,
-                }
+                action.payload,
             ];
         case 'removeCliente':
             return state.filter(cliente => cliente.id !== action.payload);
         case 'updateCliente':
-            return state.map(cli => {
-                if (cli.id === action.payload.id) {
-                    return {
-                        ...action.payload,
-                        nombre: cli.nombre,
-                        correo: cli.correo
-                    };
-                }
-                return u;
-            })
+            return state.map(cli =>
+                cli.id === action.payload.id ? action.payload : cli
+            );
         case 'loadingCliente':
             return action.payload;
         default:

@@ -1,5 +1,7 @@
 import { useCategoria } from "../hooks/useCategoria";
+import { useCliente } from "../hooks/useCliente";
 import { useEmpresa } from "../hooks/useEmpresa"
+import { useOrden } from "../hooks/useOrden";
 import { useProducto } from "../hooks/useProducto";
 import { AppContext } from "./AppContext";
 
@@ -46,6 +48,34 @@ export const AppProvider = ({children}) => {
         handlerSelectedProductoForm
     } = useProducto();
 
+    const {
+        clientes,
+        selectedCliente,
+        initialClienteForm,
+        visibleClienteForm,
+        handleRemoveCliente,
+        handlerAddCliente,
+        handlerOpenClienteForm,
+        handlerCloseClienteForm,
+        handlerUpdateCliente,
+        getClientes,
+        handlerSelectedClienteForm
+    } = useCliente();
+
+    const {
+        ordenes,
+        selectedOrden,
+        initialOrdenForm,
+        visibleOrdenForm,
+        handleRemoveOrden,
+        handlerAddOrden,
+        handlerOpenOrdenForm,
+        handlerCloseOrdenForm,
+        handlerUpdateOrden,
+        getOrdenes,
+        handlerSelectedOrdenForm
+    } = useOrden();
+
     return(
         <AppContext.Provider value={{
             empresas,
@@ -82,7 +112,31 @@ export const AppProvider = ({children}) => {
             handlerCloseProductoForm,
             handlerUpdateProducto,
             getProductos,
-            handlerSelectedProductoForm
+            handlerSelectedProductoForm,
+
+            clientes,
+            selectedCliente,
+            initialClienteForm,
+            visibleClienteForm,
+            handleRemoveCliente,
+            handlerAddCliente,
+            handlerOpenClienteForm,
+            handlerCloseClienteForm,
+            handlerUpdateCliente,
+            getClientes,
+            handlerSelectedClienteForm,
+
+            ordenes,
+            selectedOrden,
+            initialOrdenForm,
+            visibleOrdenForm,
+            handleRemoveOrden,
+            handlerAddOrden,
+            handlerOpenOrdenForm,
+            handlerCloseOrdenForm,
+            handlerUpdateOrden,
+            getOrdenes,
+            handlerSelectedOrdenForm
         }}>
             {children}
         </AppContext.Provider>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { GenericModal } from "./generic/Modal";
 import { Form } from "react-bootstrap";
 import productoService from "../services/productoService";
 import inventarioService from "../services/inventarioService";
@@ -54,24 +53,6 @@ export const InventarioExport = () => {
             <button type="button" className="btn btn-primary" onClick={openModal}>
                 Enviar a Correo
             </button>
-
-            <GenericModal
-                isOpen={modalConfig.isOpen}
-                title={modalConfig.title}
-                onClose={closeModal}
-                onConfirm={handleSubmit}
-            >
-                <Form>
-                    <Form.Group className="mb-3">
-                        <Form.Control
-                            type="mail"
-                            placeholder="Correo"
-                            value={exportForm.correo}
-                            onChange={(e) => setExportForm({ ...exportForm, correo: e.target.value })}
-                        />
-                    </Form.Group>
-                </Form>
-            </GenericModal>
         </>
     );
 };

@@ -1,10 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext} from "react";
 import { AuthContext } from "../auth/context/AuthContext";
-import empresaService from "../services/empresaService";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Alert } from "react-bootstrap";
-import { EmpresaForm } from "./Form/EmpresaForm";
 import { AppContext } from "../context/AppContext";
 import { EmpresaModalForm } from "./ModalForm/EmpresaModalForm";
 
@@ -65,9 +63,6 @@ export const EmpresaList = () => {
                         }
                     </tbody>
                 </table>
-                {!visibleEmpresaForm || 
-                    <EmpresaModalForm />
-                }
                 </>
             }
         </>

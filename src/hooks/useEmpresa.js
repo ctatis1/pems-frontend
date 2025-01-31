@@ -96,20 +96,22 @@ export const useEmpresa = () => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, eliminar!'
         }).then(async (res) => {
-            try {
-                await empresaService.removeEmpresa(nit);
-                dispatch({
-                    type: 'removeEmpresa',
-                    payload: nit
-                });
-                Swal.fire(
-                    'Empresa Eliminado!',
-                    'La empresa ha sido eliminado con exito!',
-                    'success'
-                );
-            } catch (error) {
-                if (error.response?.status == 403) {
-                    handlerLogout();
+            if (res.isConfirmed) {
+                try {
+                    await empresaService.removeEmpresa(nit);
+                    dispatch({
+                        type: 'removeEmpresa',
+                        payload: nit
+                    });
+                    Swal.fire(
+                        'Empresa Eliminado!',
+                        'La empresa ha sido eliminado con exito!',
+                        'success'
+                    );
+                } catch (error) {
+                    if (error.response?.status == 403) {
+                        handlerLogout();
+                    }
                 }
             }
         });

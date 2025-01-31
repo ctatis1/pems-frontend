@@ -1,10 +1,23 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../auth/context/AuthContext";
 import { OrdenList } from "../components/OrdenList";
-import { OrdenAdd } from "../components/OrderAdd";
+import { AppContext } from "../context/AppContext";
+import { OrdenForm } from "../components/Form/OrdenForm";
+import { ModalForm } from "../components/ModalForm/ModalForm";
 
 export const OrdenPage = () => {
+    const {
+        handlerOpenOrdenForm,
+        visibleOrdenForm,
+        selectedOrden,
+        handlerCloseOrdenForm,
+        getOrdenes,
+        ordenes
+    } = useContext(AppContext);
     const { login } = useContext(AuthContext);
+    useEffect(() => {
+        getOrdenes();
+    },[ordenes]);
     return(
         <>
             <div className="container my-4">
@@ -16,7 +29,14 @@ export const OrdenPage = () => {
                 <div className="row">
                     <div className="col">
                     {!login.isAdmin || <>
-                        <OrdenAdd />
+                        <button type="button" className="btn btn-primary" style={{ marginRight: '15px' }} onClick={handlerOpenOrdenForm}>
+                            Registrar
+                        </button>
+                        {!visibleOrdenForm||
+                           <ModalForm entidad={'Orden'} selected={selectedOrden} child={
+                                <OrdenForm handlerCloseOrdenForm={handlerCloseOrdenForm} selectedOrden={selectedOrden}/>
+                            } />
+                        } 
                     </> } 
                     </div>
                 </div>

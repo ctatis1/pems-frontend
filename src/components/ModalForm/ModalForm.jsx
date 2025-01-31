@@ -1,7 +1,3 @@
-import { Children, useContext } from "react";
-import { AppContext } from "../../context/AppContext";
-import { EmpresaForm } from "../Form/EmpresaForm";
-
 export const ModalForm = ({selected, entidad, child}) => {
     
     return (
