@@ -1,11 +1,23 @@
 import { useContext } from "react";
 import { AuthContext } from "../auth/context/AuthContext";
-import { useLocation } from "react-router-dom";
-import { ProductoForm } from "../components/ProductoForm";
+import { ModalForm } from "../components/ModalForm/ModalForm";
+import { CategoriaForm } from "../components/Form/CategoriaForm";
+import { AppContext } from "../context/AppContext";
+import { ProductoForm } from "../components/Form/ProductoForm";
 
 export const ProductoPage = () => {
+    const {
+        handlerOpenCategoriaForm,
+        visibleCategoriaForm,
+        selectedCategoria,
+        handlerCloseCategoriaForm,
+
+        handlerOpenProductoForm,
+        visibleProductoForm,
+        selectedProducto,
+        handlerCloseProductoForm,
+    } = useContext(AppContext);
     const { login } = useContext(AuthContext);
-    const location = useLocation();
     return(
         <>
             <div className="container my-4">
@@ -18,7 +30,22 @@ export const ProductoPage = () => {
                 <div className="row">
                     <div className="col">
                     {!login.isAdmin || <>
-                        <ProductoForm />
+                        <button type="button" className="btn btn-primary" style={{ marginRight: '15px' }} onClick={handlerOpenProductoForm}>
+                            Registrar
+                        </button>
+                        <button type="button" className="btn btn-primary" onClick={handlerOpenCategoriaForm}>
+                            Añadir Categoria
+                        </button>
+                        {!visibleCategoriaForm||
+                            <ModalForm entidad={'Categoria'} selected={selectedCategoria} child={
+                                <CategoriaForm handlerCloseCategoriaForm={handlerCloseCategoriaForm} selectedCategoria={selectedCategoria}/>
+                            } />
+                        }
+                        {!visibleProductoForm||
+                            <ModalForm entidad={'Producto'} selected={selectedProducto} child={
+                                <ProductoForm handlerCloseProductoForm={handlerCloseProductoForm} selectedProducto={selectedProducto}/>
+                            } />
+                        }
                     </> } 
                     </div>
                 </div>
