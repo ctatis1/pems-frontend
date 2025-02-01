@@ -10,7 +10,8 @@ export const ProductoForm = ({ selectedProducto, handlerCloseProductoForm }) => 
         getEmpresas,
         initialProductoForm,
         handlerUpdateProducto,
-        handlerAddProducto
+        handlerAddProducto,
+        productoErrors,
     } = useContext(AppContext);
 
     const [productoForm, setProductoForm] = useState(initialProductoForm);
@@ -65,12 +66,14 @@ export const ProductoForm = ({ selectedProducto, handlerCloseProductoForm }) => 
                 placeholder="Código"
                 name="codigo"
                 onChange={onInputChange} />
+            <p className="text-danger">{ productoErrors?.codigo}</p>
             
             <input
                 className="form-control my-3"
                 placeholder="Nombre"
                 name="nombre"
                 onChange={onInputChange} />
+            <p className="text-danger">{ productoErrors?.nombre}</p>
             <input
                 className="form-control my-3"
                 placeholder="Características"
@@ -81,18 +84,23 @@ export const ProductoForm = ({ selectedProducto, handlerCloseProductoForm }) => 
                 placeholder="Unidades"
                 name="stock"
                 onChange={onInputChange} />
+            <p className="text-danger">{ productoErrors?.stock}</p>
+            <label style={{ display: 'block', textAlign: 'left' }}> Precio COP</label>
             <input
                 className="form-control my-3"
                 placeholder="Precio COP"
                 name="COP"
                 defaultValue={productoForm.precios.COP} 
                 onChange={onInputChange} />
+            <p className="text-danger">{ productoErrors?.precios}</p>
+            <label style={{ display: 'block', textAlign: 'left' }}> Precio USD</label>
             <input
                 className="form-control my-3"
                 placeholder="Precio USD"
                 name="USD"
                 defaultValue={productoForm.precios.USD} 
                 onChange={onInputChange} />
+            <p className="text-danger">{ productoErrors?.precios}</p>
             <select
                 className="form-control my-3"
                 name="empresaNit"
@@ -106,6 +114,7 @@ export const ProductoForm = ({ selectedProducto, handlerCloseProductoForm }) => 
                     </option>
                 ))}
             </select>
+            <p className="text-danger">{ productoErrors?.empresaNit}</p>
             <select
                 className="form-control my-3"
                 name="categoriaId"
@@ -120,6 +129,7 @@ export const ProductoForm = ({ selectedProducto, handlerCloseProductoForm }) => 
                     </option>
                 ))}
             </select>
+            <p className="text-danger">{ productoErrors?.categoriaId}</p>
             
             <button
                 className="btn btn-success"

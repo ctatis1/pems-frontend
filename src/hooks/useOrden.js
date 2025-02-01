@@ -17,8 +17,9 @@ export const useOrden = () => {
     const [ordenes, dispatch] = useReducer(ordenReducer, initialOrden);
     const [selectedOrden, setSelectedOrden] = useState(initialOrdenForm);
     const [visibleOrdenForm, setVisibleOrdenForm] = useState(false);
+    const [ordenErrors, setOrdenErrors] = useState([]);
     const navigate = useNavigate();
-    const { login, handlerLogout } = useContext(AuthContext);
+    const { login, handleLogout } = useContext(AuthContext);
 
     const getOrdenes = async () => {
         try {
@@ -29,7 +30,8 @@ export const useOrden = () => {
             });   
         } catch (error) {
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             }
         }
     }
@@ -53,8 +55,10 @@ export const useOrden = () => {
             handlerCloseOrdenForm();
             navigate('/ordenes');
         } catch (error) {
+            if(error.response?.status === 400 ) setOrdenErrors(error.response.data);
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -78,8 +82,10 @@ export const useOrden = () => {
             handlerCloseOrdenForm();
             navigate('/ordenes');
         } catch (error) {
+            if(error.response?.status === 400 ) setOrdenErrors(error.response.data);
             if (error.response?.status == 401) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -111,7 +117,8 @@ export const useOrden = () => {
                     );
                 } catch (error) {
                     if (error.response?.status == 403) {
-                        handlerLogout();
+                        Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
                     }
                 }
             }
@@ -133,6 +140,7 @@ export const useOrden = () => {
     const handlerCloseOrdenForm = () => {
         setVisibleOrdenForm(false);
         setSelectedOrden(initialOrdenForm);
+        setOrdenErrors({});
     }
 
     return {
@@ -140,6 +148,7 @@ export const useOrden = () => {
         selectedOrden,
         initialOrdenForm,
         visibleOrdenForm,
+        ordenErrors,
         handleRemoveOrden,
         handlerAddOrden,
         handlerOpenOrdenForm,

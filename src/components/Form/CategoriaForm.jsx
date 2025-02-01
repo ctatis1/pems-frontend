@@ -7,7 +7,8 @@ export const CategoriaForm = ({ selectedCategoria, handlerCloseCategoriaForm }) 
         categorias,
         initialCategoriaForm,
         handlerUpdateCategoria,
-        handlerAddCategoria
+        handlerAddCategoria,
+        categoriaErrors
     } = useContext(AppContext);
 
     const [categoriaForm, setCategoriaForm] = useState(initialCategoriaForm);
@@ -46,6 +47,7 @@ export const CategoriaForm = ({ selectedCategoria, handlerCloseCategoriaForm }) 
                 name="nombre"
                 value={nombre}
                 onChange={onInputChange} />
+            <p className="text-danger">{ categoriaErrors?.nombre}</p>
             
             <button
                 className="btn btn-success"

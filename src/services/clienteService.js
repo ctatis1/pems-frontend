@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const BASE_URL = 'http://localhost:8080/api/cliente';
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/cliente`;
 
 const config = () => {
     return {
@@ -26,10 +26,16 @@ const saveCliente = async ({ nombre, correo }) => {
         nombre
     }, config());
 }
+const updateCliente = async ({ id, correo, nombre }) => {
+    return await axios.put(`${BASE_URL}/${id}`, {
+        correo,
+        nombre
+    }, config());
+}
 
 const removeCliente = async (id) => {
     await axios.delete(`${BASE_URL}/${id}`, config());
     return findAllClientes();
 }
 
-export default {findAllClientes, removeCliente, saveCliente, findCliente};
+export default {findAllClientes, removeCliente, saveCliente, findCliente, updateCliente};

@@ -15,8 +15,9 @@ export const useCliente = () => {
     const [clientes, dispatch] = useReducer(clienteReducer, initialCliente);
     const [selectedCliente, setSelectedCliente] = useState(initialClienteForm);
     const [visibleClienteForm, setVisibleClienteForm] = useState(false);
+    const [clienteErrors, setClienteErrors] = useState([]);
     const navigate = useNavigate();
-    const { login, handlerLogout } = useContext(AuthContext);
+    const { login, handleLogout } = useContext(AuthContext);
 
     const getClientes = async () => {
         try {
@@ -27,7 +28,8 @@ export const useCliente = () => {
             });   
         } catch (error) {
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             }
         }
     }
@@ -50,8 +52,10 @@ export const useCliente = () => {
             handlerCloseClienteForm();
             navigate('/clientes');
         } catch (error) {
+            if(error.response?.status === 400 ) setClienteErrors(error.response.data);
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -64,7 +68,7 @@ export const useCliente = () => {
             resp = await clienteService.updateCliente(cliente);
             dispatch({
                 type: 'updateCliente',
-                payload: categoria
+                payload: cliente
             });
 
             Swal.fire(
@@ -75,8 +79,10 @@ export const useCliente = () => {
             handlerCloseClienteForm();
             navigate('/clientes');
         } catch (error) {
+            if(error.response?.status === 400 ) setClienteErrors(error.response.data);
             if (error.response?.status == 401) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -96,7 +102,7 @@ export const useCliente = () => {
         }).then(async (res) => {
             if (res.isConfirmed) {
                 try {
-                    await empresaService.removeCliente(id);
+                    await clienteService.removeCliente(id);
                     dispatch({
                         type: 'removeCliente',
                         payload: id
@@ -107,8 +113,10 @@ export const useCliente = () => {
                         'success'
                     );
                 } catch (error) {
+                    if (error.response?.status == 500) setProductoErrors([{ eliminacion: 'No es posible eliminar el Cliente porque está vinculado a una Orden activa' }]);
                     if (error.response?.status == 403) {
-                        handlerLogout();
+                        Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
                     }
                 }
             }
@@ -117,7 +125,7 @@ export const useCliente = () => {
 
     const handlerSelectedClienteForm = (categoria) => {
         setVisibleClienteForm(true);
-        setSelectedCliente({ ...categoria });
+        setSelectedCliente(categoria);
     }
 
     const handlerOpenClienteForm = () => {
@@ -127,6 +135,7 @@ export const useCliente = () => {
     const handlerCloseClienteForm = () => {
         setVisibleClienteForm(false);
         setSelectedCliente(initialClienteForm);
+        setClienteErrors({});
     }
 
     return {
@@ -134,6 +143,8 @@ export const useCliente = () => {
         selectedCliente,
         initialClienteForm,
         visibleClienteForm,
+        clienteErrors,
+        setClienteErrors,
         handleRemoveCliente,
         handlerAddCliente,
         handlerOpenClienteForm,

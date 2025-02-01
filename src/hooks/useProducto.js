@@ -23,8 +23,9 @@ export const useProducto = () => {
     const [productos, dispatch] = useReducer(productoReducer, initialProducto);
     const [selectedProducto, setSelectedProducto] = useState(initialProductoForm);
     const [visibleProductoForm, setVisibleProductoForm] = useState(false);
+    const [productoErrors, setProductoErrors] = useState([]);
     const navigate = useNavigate();
-    const { login, handlerLogout } = useContext(AuthContext);
+    const { login, handleLogout } = useContext(AuthContext);
 
     const getProductos = async () => {
         try {
@@ -35,7 +36,8 @@ export const useProducto = () => {
             });   
         } catch (error) {
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             }
         }
     }
@@ -58,8 +60,10 @@ export const useProducto = () => {
             handlerCloseProductoForm();
             navigate('/productos');
         } catch (error) {
+            if(error.response?.status === 400 ) setProductoErrors(error.response.data);
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -83,8 +87,10 @@ export const useProducto = () => {
             handlerCloseProductoForm();
             navigate('/productos');
         } catch (error) {
+            if(error.response?.status === 400 ) setProductoErrors(error.response.data);
             if (error.response?.status == 401) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -107,7 +113,7 @@ export const useProducto = () => {
                     await productoService.removeProducto(id);
                     dispatch({
                         type: 'removeProducto',
-                        payload: nit
+                        payload: id
                     });
                     Swal.fire(
                         'Producto Eliminado!',
@@ -115,8 +121,10 @@ export const useProducto = () => {
                         'success'
                     );
                 } catch (error) {
+                    if (error.response?.status == 500) setProductoErrors({ eliminacion: 'No es posible eliminar el producto porque está vinculado a una Orden activa' }); 
                     if (error.response?.status == 403) {
-                        handlerLogout();
+                        Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
                     }
                 }
             }
@@ -135,6 +143,7 @@ export const useProducto = () => {
     const handlerCloseProductoForm = () => {
         setVisibleProductoForm(false);
         setSelectedProducto(initialProductoForm);
+        setProductoErrors({});
     }
 
     return {
@@ -142,6 +151,8 @@ export const useProducto = () => {
         selectedProducto,
         initialProductoForm,
         visibleProductoForm,
+        productoErrors,
+        setProductoErrors,
         handleRemoveProducto,
         handlerAddProducto,
         handlerOpenProductoForm,

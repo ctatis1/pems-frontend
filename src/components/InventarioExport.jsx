@@ -1,32 +1,15 @@
 import { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
 import productoService from "../services/productoService";
 import inventarioService from "../services/inventarioService";
 
-const initialExportForm = {
-    correo: ''
-}
-
 export const InventarioExport = () => {
-    const [exportForm, setExportForm] = useState(initialExportForm);
     const [productos, setProductos] = useState([]);
-    const [modalConfig, setModalConfig] = useState({ isOpen: false });
-    const openModal = () => {
-        setModalConfig({
-          isOpen: true,
-          title: "Registrar Empresa",
-        });
-    };
 
     useEffect(() => {
         productoService.findAllProductos().then((initialProductos) => {
             setProductos(initialProductos);
         }).catch(err => console.log(err));
     },[location]);
-    
-    const closeModal = () => {
-        setModalConfig((prev) => ({ ...prev, isOpen: false }));
-    };
 
     const handleExport = () => {
         inventarioService.exportProductos(productos).then((resp) => {
@@ -40,18 +23,11 @@ export const InventarioExport = () => {
             window.URL.revokeObjectURL(url);
         }).catch(err => alert(err));
     }; 
-    const handleSubmit = () => {
-        setExportForm(initialExportForm);
-        closeModal();
-    }; 
 
     return(
         <>
-            <button type="button" className="btn btn-primary" style={{ marginRight: '15px' }} onClick={() => handleExport()}>
+            <button type="button" className="btn btn-primary" onClick={() => handleExport()}>
                 Exportar
-            </button>
-            <button type="button" className="btn btn-primary" onClick={openModal}>
-                Enviar a Correo
             </button>
         </>
     );

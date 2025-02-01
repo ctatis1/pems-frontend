@@ -17,7 +17,7 @@ export const OrdenPage = () => {
     const { login } = useContext(AuthContext);
     useEffect(() => {
         getOrdenes();
-    },[ordenes]);
+    },[ordenes.length]);
     return(
         <>
             <div className="container my-4">

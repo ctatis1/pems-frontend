@@ -14,7 +14,7 @@ export const HomeRoutes = () => {
             <AppProvider>
                 <Routes>
                     <Route path="inicio" element={<HomePage />}/>
-                    <Route path="empresas" element={<EmpresaPage />}/>
+                    {<Route path="empresas" element={<EmpresaPage />}/>}
                     <Route path="clientes" element={<ClientePage />}/>
                     <Route path="productos" element={<ProductoPage />}/>
                     <Route path="ordenes" element={<OrdenPage />}/>

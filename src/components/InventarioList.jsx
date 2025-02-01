@@ -1,33 +1,27 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context/AuthContext";
-
-import { NavLink, useLocation } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import productoService from "../services/productoService";
 import { Alert } from "react-bootstrap";
+import { AppContext } from "../context/AppContext";
 
 export const InventarioList = () => {
-    const [productos, setProductos] = useState([]);
-    const location = useLocation();
+    const { 
+        productos, 
+        handleRemoveProducto,
+        productoErrors,
+        setProductoErrors
+    } = useContext(AppContext);
     const { login } = useContext(AuthContext);
 
     useEffect(() => {
-        productoService.findAllProductos().then((initialProductos) => {
-            setProductos(initialProductos);
-        }).catch(err => console.log(err));
-    },[location]);
-
-    const deleteProducto = (id) =>{
-        productoService.removeProducto(id).then(productosUpdated => {
-            setProductos(productosUpdated);
-            alert("Eliminación Exitosa");
-        }).catch(err =>
-            alert("Ocurrió un error al realizar la eliminación", err)
-        );
-    }
+        setTimeout(() => {
+            setProductoErrors({});
+        }, 5000);
+    }, [productoErrors]);
 
     return(
         <>
+            {!productoErrors?.eliminacion || <Alert variant="danger">{productoErrors?.eliminacion}</Alert>}
             {
                 productos.length === 0 ?
                 <Alert variant="primary">No contamos con Productos registrados de ninguna Empresa</Alert>
@@ -49,11 +43,10 @@ export const InventarioList = () => {
                     </thead>
                     <tbody>
                         {
-                            productos
-                                .map(producto => (
+                            productos.map(producto => (
                                 <tr key={producto.id}>
                                     <td>{producto.codigo}</td>
-                                    <td>{producto.empresa.nombre}</td>
+                                    <td>{producto.empresa?.nombre}</td>
                                     <td>{producto.nombre}</td>
                                     <td>{producto.caracteristicas !== null ? producto.caracteristicas:'-'}</td>
                                     <td>
@@ -65,7 +58,7 @@ export const InventarioList = () => {
                                     </td>
                                     <td>{producto.stock}</td>
                                     <td>{
-                                        producto.categoriasNombres.map((categoria, index) => (
+                                        producto.categoriasNombres?.map((categoria, index) => (
                                             <div key={index}>
                                                 {categoria}
                                             </div>
@@ -73,7 +66,7 @@ export const InventarioList = () => {
                                     </td>
                                 {!login.isAdmin || <>
                                     <td>
-                                        <i className="bi bi-trash-fill" onClick={() => deleteProducto(producto.id)} style={{ cursor: "pointer" }}></i>
+                                        <i className="bi bi-trash-fill" onClick={() => handleRemoveProducto(producto.id)} style={{ cursor: "pointer" }}></i>
                                     </td>
                                 </>}
                                     

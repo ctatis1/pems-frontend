@@ -6,7 +6,8 @@ export const ClientForm = ({ selectedCliente, handlerCloseClienteForm }) => {
         clientes,
         initialClienteForm,
         handlerUpdateCliente,
-        handlerAddCliente
+        handlerAddCliente,
+        clienteErrors
     } = useContext(AppContext);
 
     const [clienteForm, setClienteForm] = useState(initialClienteForm);
@@ -33,7 +34,7 @@ export const ClientForm = ({ selectedCliente, handlerCloseClienteForm }) => {
 
     const onSubmit = (e) =>{
         e.preventDefault();
-        clientes.some( cliente => cliente.correo === correo) ?
+        clientes.some( cliente => cliente.id === selectedCliente.id) ?
         handlerUpdateCliente(clienteForm)
         :
         handlerAddCliente(clienteForm);
@@ -48,14 +49,14 @@ export const ClientForm = ({ selectedCliente, handlerCloseClienteForm }) => {
                 name="correo"
                 value={correo}
                 onChange={onInputChange} />
-            
+            <p className="text-danger">{ clienteErrors?.correo}</p>
             <input
                 className="form-control my-3"
                 placeholder="Nombre"
                 name="nombre"
                 value={nombre}
                 onChange={onInputChange} />
-            
+            <p className="text-danger">{ clienteErrors?.nombre}</p>
             <button
                 className="btn btn-success"
                 type="submit">

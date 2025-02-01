@@ -7,7 +7,8 @@ export const EmpresaForm = ({ selectedEmpresa, handlerCloseEmpresaForm }) => {
         empresas,
         initialEmpresaForm,
         handlerUpdateEmpresa,
-        handlerAddEmpresa
+        handlerAddEmpresa,
+        empresaErrors
     } = useContext(AppContext);
 
     const [empresaForm, setEmpresaForm] = useState(initialEmpresaForm);
@@ -48,6 +49,7 @@ export const EmpresaForm = ({ selectedEmpresa, handlerCloseEmpresaForm }) => {
                 name="nit"
                 value={nit}
                 onChange={onInputChange} />
+            <p className="text-danger">{ empresaErrors?.nit}</p>
             
             <input
                 className="form-control my-3"
@@ -55,18 +57,21 @@ export const EmpresaForm = ({ selectedEmpresa, handlerCloseEmpresaForm }) => {
                 name="nombre"
                 value={nombre}
                 onChange={onInputChange} />
+            <p className="text-danger">{ empresaErrors?.nombre}</p>
             <input
                 className="form-control my-3"
                 placeholder="Direcion"
                 name="direccion"
                 value={direccion}
                 onChange={onInputChange} />
+            <p className="text-danger">{ empresaErrors?.direccion}</p>
             <input
                 className="form-control my-3"
                 placeholder="Telefono"
                 name="telefono"
                 value={telefono}
                 onChange={onInputChange} />
+            <p className="text-danger">{ empresaErrors?.telefono}</p>
             
             <button
                 className="btn btn-success"

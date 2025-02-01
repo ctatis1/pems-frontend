@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../auth/context/AuthContext";
 import { Alert, Button, Card, Col, ListGroup, Row } from "react-bootstrap";
 import { AppContext } from "../context/AppContext";
+
 export const OrdenList = () => {
     const { 
         ordenes, 

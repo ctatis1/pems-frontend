@@ -17,8 +17,9 @@ export const useEmpresa = () => {
     const [empresas, dispatch] = useReducer(empresasReducer, initialEmpresa);
     const [selectedEmpresa, setSelectedEmpresa] = useState(initialEmpresaForm);
     const [visibleEmpresaForm, setVisibleEmpresaForm] = useState(false);
+    const [empresaErrors, setEmpresaErrors] = useState([]);
     const navigate = useNavigate();
-    const { login, handlerLogout } = useContext(AuthContext);
+    const { login, handleLogout } = useContext(AuthContext);
 
     const getEmpresas = async () => {
         try {
@@ -29,7 +30,8 @@ export const useEmpresa = () => {
             });   
         } catch (error) {
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             }
         }
     }
@@ -52,8 +54,10 @@ export const useEmpresa = () => {
             handlerCloseForm();
             navigate('/empresas');
         } catch (error) {
+            if(error.response?.status === 400 ) setEmpresaErrors(error.response.data);
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -77,8 +81,10 @@ export const useEmpresa = () => {
             handlerCloseForm();
             navigate('/empresas');
         } catch (error) {
+            if(error.response?.status === 400 ) setEmpresaErrors(error.response.data);
             if (error.response?.status == 401) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -109,8 +115,10 @@ export const useEmpresa = () => {
                         'success'
                     );
                 } catch (error) {
+                    if (error.response?.status == 500) setEmpresaErrors({ eliminacion: 'No es posible eliminar la empresa porque está vinculado a un Producto existente' }); 
                     if (error.response?.status == 403) {
-                        handlerLogout();
+                        Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
                     }
                 }
             }
@@ -129,6 +137,7 @@ export const useEmpresa = () => {
     const handlerCloseEmpresaForm = () => {
         setVisibleEmpresaForm(false);
         setSelectedEmpresa(initialEmpresaForm);
+        setEmpresaErrors({});
     }
 
     return {
@@ -136,6 +145,8 @@ export const useEmpresa = () => {
         selectedEmpresa,
         initialEmpresaForm,
         visibleEmpresaForm,
+        empresaErrors,
+        setEmpresaErrors,
         handleRemoveEmpresa,
         handlerAddEmpresa,
         handlerOpenEmpresaForm,

@@ -54,7 +54,7 @@ export const Navbar = () => {
                         </span>
                         <button
                             onClick={handleLogout}
-                            className="btn btn-outline-success">
+                            className="btn btn-outline-primary">
                             Logout
                         </button>
                     </div>

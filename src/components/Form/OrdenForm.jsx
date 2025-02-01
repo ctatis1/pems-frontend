@@ -12,7 +12,8 @@ export const OrdenForm = ({ selectedOrden, handlerCloseOrdenForm }) => {
         handlerUpdateOrden,
         handlerAddOrden,
         getClientes,
-        getProductos
+        getProductos,
+        ordenErrors
     } = useContext(AppContext);
 
     const [ordenForm, setOrdenForm] = useState(initialOrdenForm);
@@ -69,6 +70,7 @@ export const OrdenForm = ({ selectedOrden, handlerCloseOrdenForm }) => {
                     <option value="USD">Dolar Americano</option>
                 </Form.Control>
             </Form.Group>
+            <p className="text-danger">{ ordenErrors?.moneda}</p>
             <Form.Group className="mb-3">
                 <Form.Control
                     as="select"
@@ -85,6 +87,7 @@ export const OrdenForm = ({ selectedOrden, handlerCloseOrdenForm }) => {
                         ))}
                 </Form.Control>
             </Form.Group>
+            <p className="text-danger">{ ordenErrors?.clienteId}</p>
             <Form.Group className="mb-3">
                 <Form.Label><b>Productos</b></Form.Label>
                 {productos.map((producto) => (

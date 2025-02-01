@@ -2,6 +2,7 @@ import { useReducer } from "react"
 import { loginReducer } from "../reducers/loginReducer";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
+import Swal from "sweetalert2";
 
 const initialLogin = 
     JSON.parse(sessionStorage.getItem('login')) 
@@ -24,7 +25,7 @@ export const useAuth = () => {
         sessionStorage.removeItem('login');
         sessionStorage.removeItem('token');
         sessionStorage.clear();
-        navigate('/login')
+        navigate('/login');
     }
 
     const handleLogin = async ({ username, password }) => {
@@ -50,7 +51,14 @@ export const useAuth = () => {
             sessionStorage.setItem('token', `Bearer ${token}`);
             navigate('/inicio');
         } catch (error) {
-            console.log(error);
+            if (error.response?.status == 401) {
+                Swal.fire('Error Login', 'Username o password invalidos', 'error');
+            } else if (error.response?.status == 403) {
+                Swal.fire('Error Login', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
+            } else {
+                throw error;
+            }
         }
     }
 

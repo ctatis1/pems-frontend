@@ -9,13 +9,17 @@ const initialCategoria = [];
 const initialCategoriaForm = {
     nombre: ''
 }
+const initialErrores = {
+    nombre: ''
+}
 
 export const useCategoria = () => {
     const [categorias, dispatch] = useReducer(categoriaReducer, initialCategoria);
     const [selectedCategoria, setSelectedCategoria] = useState(initialCategoriaForm);
     const [visibleCategoriaForm, setVisibleCategoriaForm] = useState(false);
+    const [categoriaErrors, setCategoriaErrors] = useState(initialErrores);
     const navigate = useNavigate();
-    const { login, handlerLogout } = useContext(AuthContext);
+    const { login, handleLogout } = useContext(AuthContext);
 
     const getCategorias = async () => {
         try {
@@ -26,7 +30,8 @@ export const useCategoria = () => {
             });   
         } catch (error) {
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             }
         }
     }
@@ -49,8 +54,10 @@ export const useCategoria = () => {
             handlerCloseCategoriaForm();
             navigate('/productos');
         } catch (error) {
+            if(error.response?.status === 400 ) setCategoriaErrors(error.response.data);
             if (error.response?.status == 403) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -74,8 +81,10 @@ export const useCategoria = () => {
             handlerCloseCategoriaForm();
             navigate('/productos');
         } catch (error) {
+            if(error.response?.status === 400 ) setCategoriaErrors(error.response.data);
             if (error.response?.status == 401) {
-                handlerLogout();
+                Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
             } else {
                 throw error;
             }
@@ -107,7 +116,8 @@ export const useCategoria = () => {
                     );
                 } catch (error) {
                     if (error.response?.status == 403) {
-                        handlerLogout();
+                        Swal.fire('Error Autorizacion', 'No tiene acceso al recurso o permisos!', 'error')
+                    .then(() => handleLogout());
                     }
                 }
             }
@@ -126,6 +136,7 @@ export const useCategoria = () => {
     const handlerCloseCategoriaForm = () => {
         setVisibleCategoriaForm(false);
         setSelectedCategoria(initialCategoriaForm);
+        setCategoriaErrors({});
     }
 
     return {
@@ -133,6 +144,7 @@ export const useCategoria = () => {
         selectedCategoria,
         initialCategoriaForm,
         visibleCategoriaForm,
+        categoriaErrors,
         handleRemoveCategoria,
         handlerAddCategoria,
         handlerOpenCategoriaForm,

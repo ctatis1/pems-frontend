@@ -1,4 +1,4 @@
-import { useContext} from "react";
+import { useContext, useEffect} from "react";
 import { AuthContext } from "../auth/context/AuthContext";
 import { NavLink } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -11,12 +11,21 @@ export const EmpresaList = () => {
         empresas, 
         visibleEmpresaForm, 
         handlerSelectedEmpresaForm, 
-        handleRemoveEmpresa
+        handleRemoveEmpresa,
+        empresaErrors,
+        setEmpresaErrors
     } = useContext(AppContext);
     const { login } = useContext(AuthContext);
 
+    useEffect(() => {
+        setTimeout(() => {
+            setEmpresaErrors({});
+        }, 5000);
+    }, [empresaErrors]);
+
     return(
         <>
+            {!empresaErrors?.eliminacion || <Alert variant="danger">{empresaErrors?.eliminacion}</Alert>}
             {
                 empresas?.length === 0 ?
                 <Alert variant="primary">Aun no hay Empresas registradas</Alert>
